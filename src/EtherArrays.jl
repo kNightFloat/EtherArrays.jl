@@ -73,8 +73,12 @@ end
     return getfield(a, :col_)
 end
 
-@inline function _data(a::E2Array{S, T, P})::Ref where {S <: Tuple, T <: Real, P}
+@inline function _data(a::E2Array{S, T, P}) where {S <: Tuple, T <: Real, P}
     return getfield(a, :data_).x
+end
+
+@inline function _dataref(a::E2Array{S, T, P})::Ref where {S <: Tuple, T <: Real, P}
+    return getfield(a, :data_)
 end
 
 @inline function Base.getindex(a::E2Array{S, T, P}, i::Int) where {S <: Tuple, T <: Real, P}
@@ -101,8 +105,8 @@ end
     row::Integer,
     col::Integer,
     data::AbstractArray{T, 2},
-)::E2Array{S, eltype(data), length(S.parameters)} where {S <: Tuple, T <: Real}
-    return E2Array{S, eltype(data), length(S.parameters)}(Int(row), Int(col), Ref{typeof(data)}(data))
+)::E2Array{S, T, length(S.parameters)} where {S <: Tuple, T <: Real}
+    return E2Array{S, T, length(S.parameters)}(Int(row), Int(col), Ref{typeof(data)}(data))
 end
 
 @inline function E2Array{S, T}(
@@ -145,7 +149,7 @@ end
     return E2Vector{N, T}(row, col, data)
 end
 
-@inline function E2Matrix{M, N}(row::Integer, col::Integer, data::AbstractArray{T, 2}) where {M, N, T}
+@inline function E2Matrix{M, N}(row::Integer, col::Integer, data::AbstractArray{T, 2}) where {M, N, T <: Real}
     return E2Matrix{M, N, T}(row, col, data)
 end
 

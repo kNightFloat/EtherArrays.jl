@@ -17,11 +17,9 @@ m3, rho3, u3, v3, s3_11, s3_12, s3_21, s3_22...
 mn, rhon, un, vn, sn_11, sn_12, sn_21, sn_22...
 ```
 
-which means a physical element has: mass $m$, density $\rho$, velocity vector $\vec{u}=(u,v)$ and stress tensor:
-
-$$
-\sigma=\begin{pmatrix}s_{11} & s_{12} \\ s_{21} & s_{22}\end{pmatrix}
-$$.
+which means a physical element has: mass $m$, density $\rho$, velocity vector $\vec{u}=(u,v)$ and 2-ordered stress tensor $
+\sigma=\tilde{s}_{ij}
+$.
 
 Largely thanks to [`StaticArrays.jl`](https://github.com/JuliaArrays/StaticArrays.jl) and Julia type system, we can redefine container type in kernel function on device. 
 
