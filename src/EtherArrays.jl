@@ -13,6 +13,7 @@ export EtherArray
 export EtherScalar, EtherVector, EtherMatrix, EtherSquareMatrix, EtherVecOrMat
 export E2Array
 export E2Scalar, E2Vector, E2Matrix, E2SquareMatrix, E2VecOrMat
+export row!, col!
 
 import StaticArrays
 import StaticArraysCore
@@ -54,8 +55,8 @@ end
     Thus, E2Array is designed to store 2D arrays in row-major order.
 =#
 struct E2Array{S, T <: Real, P} <: EtherArray{S, T, P}
-    row_::Int
-    col_::Int
+    row_::Ref{Int}
+    col_::Ref{Int}
     data_::Ref
 end
 
@@ -66,11 +67,11 @@ const E2SquareMatrix{N, T <: Real} = E2Array{Tuple{N, N}, T, 2}
 const E2VecOrMat{T} = Union{E2Vector{<:Any, T}, E2Matrix{<:Any, <:Any, T}}
 
 @inline function _row(a::E2Array{S, T, P})::Int where {S <: Tuple, T <: Real, P}
-    return getfield(a, :row_)
+    return getfield(a, :row_).x
 end
 
 @inline function _col(a::E2Array{S, T, P})::Int where {S <: Tuple, T <: Real, P}
-    return getfield(a, :col_)
+    return getfield(a, :col_).x
 end
 
 @inline function _data(a::E2Array{S, T, P}) where {S <: Tuple, T <: Real, P}
@@ -91,6 +92,14 @@ end
     return @inbounds _data(a)[_row(a), _col(a) - 1 + i] = unsafe_real(T, v)
 end
 
+@inline function row!(a::E2Array{S, T, P}, r::Integer)::Int where {S <: Tuple, T <: Real, P}
+    return a.row_.x = Int(r)
+end
+
+@inline function col!(a::E2Array{S, T, P}, c::Integer)::Int where {S <: Tuple, T <: Real, P}
+    return a.col_.x = Int(c)
+end
+
 # * ===== Constructors ===== * #
 
 @inline function E2Array{S, T, P}(
@@ -98,7 +107,7 @@ end
     col::Integer,
     data::AbstractArray{T, 2},
 )::E2Array{S, T, P} where {S <: Tuple, T <: Real, P}
-    return E2Array{S, T, P}(Int(row), Int(col), Ref{typeof(data)}(data))
+    return E2Array{S, T, P}(Ref{Int}(Int(row)), Ref{Int}(Int(col)), Ref{typeof(data)}(data))
 end
 
 @inline function E2Array{S}(
@@ -106,7 +115,7 @@ end
     col::Integer,
     data::AbstractArray{T, 2},
 )::E2Array{S, T, length(S.parameters)} where {S <: Tuple, T <: Real}
-    return E2Array{S, T, length(S.parameters)}(Int(row), Int(col), Ref{typeof(data)}(data))
+    return E2Array{S, T, length(S.parameters)}(Ref{Int}(Int(row)), Ref{Int}(Int(col)), Ref{typeof(data)}(data))
 end
 
 @inline function E2Array{S, T}(
@@ -114,7 +123,7 @@ end
     col::Integer,
     data::AbstractArray{T, 2},
 )::E2Array{S, T, length(S.parameters)} where {S <: Tuple, T <: Real}
-    return E2Array{S, T, length(S.parameters)}(Int(row), Int(col), Ref{typeof(data)}(data))
+    return E2Array{S, T, length(S.parameters)}(Ref{Int}(Int(row)), Ref{Int}(Int(col)), Ref{typeof(data)}(data))
 end
 
 @inline function E2Array{S, T, P}()::StaticArraysCore.MArray{S, T, P, tuple_prod(S)} where {S <: Tuple, T <: Real, P}
