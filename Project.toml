@@ -10,7 +10,7 @@ StaticArraysCore = "1e83bf80-4336-4d27-bf5d-d5a4f845583c"
 Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
 
 [compat]
-EtherMaths = ">=0.1.1"
+EtherMaths = "0.1.2"
 StaticArrays = ">=1.9.15"
 StaticArraysCore = ">=1.4.4"
 Test = ">=1.11.0"
