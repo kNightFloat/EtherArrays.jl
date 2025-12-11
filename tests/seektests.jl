@@ -9,7 +9,10 @@
 
 using Test
 using StaticArrays
-using EtherArrays
+using Pkg
+Pkg.activate(joinpath(@__DIR__, "..")) # activate the package environment
+
+using EtherArrays # * the tested package
 
 @testset "mutable or not" begin
     data = randn(Float32, 3, 7)

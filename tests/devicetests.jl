@@ -13,6 +13,8 @@ using Test # require Test stdlib
 using KernelAbstractions # require KernelAbstractions.jl package
 using oneAPI # require oneAPI.jl package
 using StaticArrays # require StaticArrays.jl package
+using Pkg
+Pkg.activate(joinpath(@__DIR__, "..")) # activate the package environment
 
 using EtherArrays # * the tested package
 
